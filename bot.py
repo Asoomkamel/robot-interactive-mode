@@ -86,11 +86,12 @@ class NovaRobot:
             os.remove(filename)
 
     def think(self, user_text):
+        """Process user text with Gemini AI | معالجة نص المستخدم عبر الذكاء الاصطناعي"""
         try:
             current_time = datetime.now().strftime("%A, %H:%M")
             prompt_with_context = f"[System Time: {current_time}] User asks: {user_text}"
 
-            # Memory reset logic
+            # Memory reset logic | منطق تصفير الذاكرة
             if any(word in user_text for word in ["انسى", "موضوع جديد"]):
                 self.chat = self.client.chats.create(
                     model="gemini-2.5-flash",

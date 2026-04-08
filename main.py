@@ -3,46 +3,46 @@ from bot import NovaRobot
 import time
 
 def main():
-    # تهيئة الروبوت
+    # Initialize the robot | تهيئة الروبوت
     nova = NovaRobot()
     
-    # متغير حالة الاستيقاظ (في البداية يكون نائماً)
+    # Wake state variable (Initially asleep) | متغير حالة الاستيقاظ (في البداية يكون نائماً)
     is_awake = False
     
-    print("\n--- 🌑 النظام يعمل في وضع الاستعداد ---")
-    print("--- 🗣️ قل 'كامل' لتفعيل الروبوت ---")
+    print("\n--- 🌑 System in Standby Mode | النظام يعمل في وضع الاستعداد ---")
+    print("--- 🗣️ Say 'Kamel' to activate | قل 'كامل' لتفعيل الروبوت ---")
 
     while True:
-        # 1. الروبوت يستمع دائماً
+        # 1. Robot is always listening | الروبوت يستمع دائماً
         user_text = nova.listen()
 
-        # إذا لم يسمع شيئاً أو حدث خطأ، أعد المحاولة
+        # If nothing heard or error, retry | إذا لم يسمع شيئاً أو حدث خطأ، أعد المحاولة
         if user_text is None:
             continue
 
-        # 2. الوضع الأول: الروبوت نائم (ينتظر كلمة السر)
+        # 2. Mode 1: Robot is asleep (Waiting for wake word) | الوضع الأول: الروبوت نائم (ينتظر كلمة السر)
         if not is_awake:
-            # التحقق من وجود كلمة "كامل" في الجملة
+            # Check for "Kamel" in the sentence | التحقق من وجود كلمة "كامل" في الجملة
             if "كامل" in user_text or "يا كامل" in user_text:
-                print("🟢 تم تفعيل النظام!")
+                print("🟢 System Activated! | تم تفعيل النظام!")
                 is_awake = True
                 
-                # رسالة الترحيب المطلوبة
+                # Greeting message | رسالة الترحيب المطلوبة
                 nova.speak("أهلاً بك. أنا كامل، الروبوت الذكي. كيف يمكنني مساعدتك؟")
             else:
-                # يطبع ما سمعه ولكنه يتجاهله
-                print(f"😴 (تجاهل): {user_text}")
+                # Print heard text but ignore | يطبع ما سمعه ولكنه يتجاهله
+                print(f"😴 (Ignored | تجاهل): {user_text}")
 
-        # 3. الوضع الثاني: الروبوت مستيقظ (يعمل مع Gemini)
+        # 3. Mode 2: Robot is awake (Interacting with Gemini) | الوضع الثاني: الروبوت مستيقظ (يعمل مع Gemini)
         else:
-            # (اختياري) أمر لإعادة الروبوت للنوم
+            # (Optional) Sleep command | (اختياري) أمر لإعادة الروبوت للنوم
             if "شكرا" in user_text or "توقف" in user_text or "نوم" in user_text:
                 is_awake = False
                 nova.speak("عفواً. سأكون في الانتظار.")
-                print("--- 🌑 عاد النظام لوضع الاستعداد ---")
+                print("--- 🌑 System returned to Standby | عاد النظام لوضع الاستعداد ---")
                 continue
 
-            # إرسال النص للذكاء الاصطناعي والرد
+            # Send text to AI and get reply | إرسال النص للذكاء الاصطناعي والرد
             reply = nova.think(user_text)
             nova.speak(reply)
 
